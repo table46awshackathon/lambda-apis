@@ -10,13 +10,20 @@ exports.handler = function(event, context, callback) {
 
   const bucket = 'table46hackathondata';
   var key = 'pii/SamplePFT500Rows.csv';
+  var id = null;
 
-  if (event.queryStringParameters && event.queryStringParameters.source) {
-    key = event.queryStringParameters.source;
+  if (event.queryStringParameters) {
+    if (event.queryStringParameters.source) {
+      key = event.queryStringParameters.source;
+    }
+    if (event.queryStringParameters.id) {
+      id = event.queryStringParameters.id;
+    }
   }
 
   loadData(bucket, key)
     .then(convertData)
+    .then((data) => filterData(data, id))
     .then((data) => {
       var response = {
           statusCode: 200,
@@ -58,5 +65,15 @@ function convertData(data) {
       }
       resolve(data);
     });
+  });
+}
+
+function filterData(data, id) {
+  return new Promise((resolve, reject) => {
+    if (!id) {
+      resolve(data);
+    } else {
+      resolve(_.filter(data, {ID: id}));
+    }
   });
 }
