@@ -6,8 +6,14 @@ const s3 = new aws.S3({apiVersion: '2006-03-01', region: 'us-west-2'});
 var csv = require('csv');
 
 exports.handler = function(event, context, callback) {
+  console.log(JSON.stringify(event));
+
   const bucket = 'table46hackathondata';
-  const key = 'pii/SamplePFT500Rows.csv';
+  var key = 'pii/SamplePFT500Rows.csv';
+
+  if (event.queryStringParameters && event.queryStringParameters.source) {
+    key = event.queryStringParameters.source;
+  }
 
   loadData(bucket, key)
     .then(convertData)
@@ -24,7 +30,14 @@ exports.handler = function(event, context, callback) {
     })
     .catch(error => {
       console.log(error);
-      callback(error);
+      var response = {
+          statusCode: 404,
+          headers: {
+              'Access-Control-Allow-Origin': "*"
+          },
+          body: `File not found: ${key}`
+      };
+      callback(null, response);
     });
 }
 
