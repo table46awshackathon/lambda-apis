@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "pack": "rm -rf deploy && mkdir deploy && cp index.js package.json deploy/ && cd deploy/ && npm install --no-optional && zip -r ../deploy.zip . && cd ..",
+    "deploy": "aws lambda update-function-code --function-name GetFitnessData --zip-file fileb://./deploy.zip",
     "test": "sam local invoke --event sample-api.json"
   },
   "author": "",
