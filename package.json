@@ -1,0 +1,22 @@
+{
+  "name": "lambda-apis",
+  "version": "1.0.0",
+  "description": "APIs",
+  "main": "index.js",
+  "files": [
+    "*.js"
+  ],
+  "scripts": {
+    "pack": "rm -rf deploy && mkdir deploy && cp index.js package.json deploy/ && cd deploy/ && npm install --no-optional && zip -r ../deploy.zip . && cd ..",
+    "test": "sam local invoke --event sample-api.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "optionalDependencies": {
+    "aws-sdk": "^2.157.0"
+  },
+  "dependencies": {
+    "csv": "^2.0.0",
+    "lodash": "^4.17.4"
+  }
+}
